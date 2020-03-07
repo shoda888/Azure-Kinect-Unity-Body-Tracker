@@ -4,6 +4,7 @@
 [Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
+Assets/K4AUnityBT/Plugins/
 
 # Visual Studio cache directory
 .vs/
@@ -40,3 +41,4 @@ dnn_model*.onnx
 cublas64_100.dll
 cudart64_100.dll
 cudnn64_7.dll
+onnxruntime.dll
