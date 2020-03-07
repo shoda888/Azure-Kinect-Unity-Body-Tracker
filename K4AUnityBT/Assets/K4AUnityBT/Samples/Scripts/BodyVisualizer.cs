@@ -1,6 +1,7 @@
 ﻿using AzureKinect.Unity.BodyTracker;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class BodyVisualizer : MonoBehaviour
 {
@@ -14,11 +15,13 @@ public class BodyVisualizer : MonoBehaviour
 
     private IList<Renderer> jointRenderers;
     private IList<Renderer> calibratedJointRenderers;
+    private string dt;
 
     void Start()
     {
         this.jointRenderers = new List<Renderer>();
         this.calibratedJointRenderers = new List<Renderer>();
+        this.dt = DateTime.Now.ToString("yyyyMMddHHmmssfff");
         for (var i = 0; i < (int)JointIndex.EarRight; i++)
         {
             var jointObject = GameObject.Instantiate(this.jointPrefab, Vector3.zero, Quaternion.identity, this.transform);
@@ -62,8 +65,10 @@ public class BodyVisualizer : MonoBehaviour
                 //         falseにすると，ファイルを新規作成する
                 var append = true;
                 // 出力用のファイルを開く
-                using (var sw = new System.IO.StreamWriter(@"test.csv", append))
+                string filename = $"data/{this.dt}.csv";
+                using (var sw = new System.IO.StreamWriter(filename, append))
                 {
+                    sw.Write("{0}, ", DateTime.Now.ToString("yyyyMMddHHmmssfff"));
                     for (var i = 0; i < this.jointRenderers.Count; i++)
                     {
                         var jointPosition = body.body.skeleton.joints[i].position;
