@@ -56,14 +56,31 @@ public class BodyVisualizer : MonoBehaviour
 
         if (this.IsActive)
         {
-            for (var i = 0; i < this.jointRenderers.Count; i++)
+            try
             {
-                var jointPosition = body.body.skeleton.joints[i].position;
-                this.jointRenderers[i].transform.localPosition = new Vector3(jointPosition.x * (this.IsMirror ? -1 : 1), jointPosition.y * -1, jointPosition.z) / 1000f;
+                // appendをtrueにすると，既存のファイルに追記
+                //         falseにすると，ファイルを新規作成する
+                var append = true;
+                // 出力用のファイルを開く
+                using (var sw = new System.IO.StreamWriter(@"test.csv", append))
+                {
+                    for (var i = 0; i < this.jointRenderers.Count; i++)
+                    {
+                        var jointPosition = body.body.skeleton.joints[i].position;
+                        sw.Write("{0}, {1}, {2},", jointPosition.x, jointPosition.y, jointPosition.z);
+                        this.jointRenderers[i].transform.localPosition = new Vector3(jointPosition.x * (this.IsMirror ? -1 : 1), jointPosition.y * -1, jointPosition.z) / 1000f;
 
-                var calibratedJointPosition = body.calibratedJointPoints[i];
-                this.calibratedJointRenderers[i].transform.localPosition =
-                   new Vector3(-0.5f + (calibratedJointPosition.x / 1920f) * (this.IsMirror ? 1 : -1), -0.5f + (calibratedJointPosition.y / 1080f), -0.01f);
+                        var calibratedJointPosition = body.calibratedJointPoints[i];
+                        this.calibratedJointRenderers[i].transform.localPosition =
+                        new Vector3(-0.5f + (calibratedJointPosition.x / 1920f) * (this.IsMirror ? 1 : -1), -0.5f + (calibratedJointPosition.y / 1080f), -0.01f);
+                    }
+                    sw.Write("\r\n");
+                }
+            }
+            catch (System.Exception e)
+            {
+                // ファイルを開くのに失敗したときエラーメッセージを表示
+                System.Console.WriteLine(e.Message);
             }
         }
     }
