@@ -22,7 +22,7 @@ public class BodyVisualizer : MonoBehaviour
         this.jointRenderers = new List<Renderer>();
         this.calibratedJointRenderers = new List<Renderer>();
         this.dt = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-        for (var i = 0; i < (int)JointIndex.EarRight; i++)
+        for (var i = 0; i <= (int)JointIndex.EarRight; i++)
         {
             var jointObject = GameObject.Instantiate(this.jointPrefab, Vector3.zero, Quaternion.identity, this.transform);
             var jointRenderer = jointObject.GetComponent<Renderer>();
