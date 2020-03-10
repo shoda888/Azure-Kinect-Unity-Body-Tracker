@@ -5,6 +5,8 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using UnityEditor;
+using System.IO;
 
 namespace AzureKinect.Unity.BodyTracker.Sample
 {
@@ -99,7 +101,6 @@ namespace AzureKinect.Unity.BodyTracker.Sample
             commandBuffer.IssuePluginCustomTextureUpdateV2(callback, this.depthTexture, depthTextureId);
             commandBuffer.IssuePluginCustomTextureUpdateV2(callback, this.colorTexture, colorTextureId);
             commandBuffer.IssuePluginCustomTextureUpdateV2(callback, this.transformedDepthTexture, transformedDepthTextureId);
-
             try
             {
                 AzureKinectBodyTracker.Start(depthTextureId, colorTextureId, transformedDepthTextureId, depthMode, cpuOnly);
@@ -118,6 +119,18 @@ namespace AzureKinect.Unity.BodyTracker.Sample
             }
             AzureKinectBodyTracker.End();
             this.ProcessFinallize();
+        }
+        private void SaveTexture(string filePath, Texture2D texture)
+        {
+            // バイト配列に変換する
+            var bytes = texture.EncodeToPNG();
+            Debug.Log(bytes);
+            // ファイルを保存する
+            // パスは拡張子付きであること
+            System.IO.File.WriteAllBytes(filePath, bytes);
+
+            // 最後にRefresh
+            AssetDatabase.Refresh();
         }
 
         private void ProcessFinallize(bool invokeCompletedAction = true)
@@ -197,5 +210,11 @@ namespace AzureKinect.Unity.BodyTracker.Sample
             };
             this.StopProcess();
         }
+
+        public void OnButtonPressed()
+        {
+            Debug.Log("Pushed!");
+            // this.SaveTexture("data/depth/test.png", this.colorTexture);
+	    }
     }
 }
